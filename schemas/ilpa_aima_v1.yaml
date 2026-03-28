@@ -1,0 +1,52 @@
+# ILPA/AIMA DDQ Question Taxonomy — v1 Schema
+# Maps ~200 standard due diligence questions across 9 categories.
+# Extensible: institutions can add custom questions under "custom" category.
+#
+# Each question has:
+#   id: unique identifier (category prefix + number)
+#   text: the question text
+#   answer_type: text | numeric | boolean | date | list
+#   required: whether the question must be answered
+
+version: "1.0"
+
+categories:
+  - id: investment_strategy
+    name: "Investment Strategy & Process"
+    questions: []  # TODO: populate from ILPA DDQ template
+
+  - id: organization
+    name: "Organization & Team"
+    questions: []
+
+  - id: track_record
+    name: "Track Record & Attribution"
+    questions: []
+
+  - id: fees_terms
+    name: "Fund Terms & Fees"
+    questions: []
+
+  - id: risk_management
+    name: "Risk Management"
+    questions: []
+
+  - id: compliance
+    name: "Compliance & Regulatory"
+    questions: []
+
+  - id: esg
+    name: "ESG & Responsible Investing"
+    questions: []
+
+  - id: cybersecurity
+    name: "IT & Cybersecurity"
+    questions: []
+
+  - id: diversity
+    name: "Diversity, Equity & Inclusion"
+    questions: []
+
+  - id: custom
+    name: "Institution-Specific Questions"
+    questions: []

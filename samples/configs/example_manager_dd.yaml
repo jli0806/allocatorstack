@@ -1,0 +1,46 @@
+# Example: Manager Due Diligence pipeline config
+# Copy this file and customize for your search.
+
+workflow: manager_dd
+
+data_sources:
+  ddq_directory: ./samples/data/ddqs/
+  pitch_books: ./samples/data/pitchbooks/
+  sec_edgar: true
+  finra_brokercheck: true
+
+llm:
+  provider: anthropic          # or: openai, ollama, etc. (via litellm)
+  model: claude-sonnet-4-6     # any litellm-supported model
+  # API key: set ANTHROPIC_API_KEY env var (never put keys in this file)
+
+steps:
+  - agent: screening
+    inputs:
+      criteria:
+        asset_class: us_small_cap_value
+        min_track_record_years: 5
+        aum_range: [1_000_000_000, 10_000_000_000]
+        benchmark: russell_2000_value
+
+  - agent: ddq_analysis
+    on_failure: halt
+    verification_gate:
+      mode: blocking
+      rules:
+        - type: required_fields
+          fields: [investment_strategy, team_bios, track_record, fee_structure]
+        - type: cross_reference
+          sources: [sec_adv, finra_brokercheck]
+        - type: plausible_range
+          field: aum_total
+          min: 0
+          max: 10_000_000_000_000
+
+  - agent: comparison_matrix
+    output: ./output/comparison_matrix.xlsx
+
+  - agent: ic_memo
+    template: standard_ic_memo
+    output: ./output/ic_memo_draft.md
+    provenance: true
