@@ -34,3 +34,4 @@ samples/data/*.csv
 
 # Output
 output/
+workspace/

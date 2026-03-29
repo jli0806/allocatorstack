@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# AllocatorStack Demo
+# Runs the core pipeline on sample DDQs to demonstrate the full workflow.
+#
+# Usage:
+#   ./demo
+#
+# What it does:
+#   1. Extracts text from 3 sample DDQ PDFs
+#   2. Shows the extracted content structure
+#   3. Tells you how to run the full pipeline with Claude Code
+#
+# Prerequisites:
+#   pip install pymupdf requests openpyxl
+
+set -e
+
+WORKSPACE="workspace/demo"
+SAMPLES="samples/ddqs"
+
+echo "============================================"
+echo "  AllocatorStack Demo"
+echo "============================================"
+echo ""
+
+# Check dependencies
+python3 -c "import fitz" 2>/dev/null || { echo "ERROR: PyMuPDF not installed. Run: pip install pymupdf"; exit 1; }
+python3 -c "import requests" 2>/dev/null || { echo "ERROR: requests not installed. Run: pip install requests"; exit 1; }
+
+# Check sample DDQs exist
+if [ ! -d "$SAMPLES" ] || [ -z "$(ls $SAMPLES/*.pdf 2>/dev/null)" ]; then
+    echo "ERROR: Sample DDQs not found. Run: python scripts/generate-sample-ddqs.py"
+    exit 1
+fi
+
+echo "Step 1: Extract text from sample DDQs"
+echo "--------------------------------------"
+mkdir -p "$WORKSPACE/extracted"
+python3 scripts/extract-pdf.py $SAMPLES/*.pdf --output "$WORKSPACE/extracted/"
+echo ""
+
+echo "Step 2: Show extraction results"
+echo "-------------------------------"
+for f in $WORKSPACE/extracted/*.json; do
+    name=$(basename "$f" .json)
+    pages=$(python3 -c "import json; d=json.load(open('$f')); print(len(d['pages']))")
+    chars=$(python3 -c "import json; d=json.load(open('$f')); print(sum(len(p['text']) for p in d['pages']))")
+    echo "  $name: $pages pages, $chars characters extracted"
+done
+echo ""
+
+echo "Step 3: Preview extracted content"
+echo "---------------------------------"
+for f in $WORKSPACE/extracted/*.json; do
+    name=$(basename "$f" .json)
+    echo ""
+    echo "--- $name (first 300 chars of page 2) ---"
+    python3 -c "
+import json
+d = json.load(open('$f'))
+if len(d['pages']) > 1:
+    print(d['pages'][1]['text'][:300].strip())
+else:
+    print('(only title page)')
+"
+done
+echo ""
+
+echo "============================================"
+echo "  Extraction complete!"
+echo "============================================"
+echo ""
+echo "The sample DDQs are now extracted and ready for analysis."
+echo "To run the full pipeline with Claude Code:"
+echo ""
+echo "  1. Open Claude Code in this directory"
+echo "  2. Run /analyze-ddq to map DDQ answers to ILPA taxonomy"
+echo "     and cross-reference against SEC ADV filings"
+echo "  3. Run /draft-memo to generate an IC memo draft"
+echo "     with provenance on every data point"
+echo ""
+echo "Sample DDQs demonstrate three manager profiles:"
+echo "  - Granite Peak Capital:    Clean, complete, strong performer"
+echo "  - Meridian Value Partners: Borderline (AUM discrepancy, incomplete)"
+echo "  - Osprey Global Advisors:  Red flags (SEC enforcement, high fees)"
+echo ""
+echo "Workspace: $WORKSPACE/"

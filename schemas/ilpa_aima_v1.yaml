@@ -1,5 +1,6 @@
 # ILPA/AIMA DDQ Question Taxonomy — v1 Schema
 # Maps ~200 standard due diligence questions across 9 categories.
+# Based on the ILPA Due Diligence Questionnaire and AIMA DDQ templates.
 # Extensible: institutions can add custom questions under "custom" category.
 #
 # Each question has:
@@ -13,40 +14,644 @@ version: "1.0"
 categories:
   - id: investment_strategy
     name: "Investment Strategy & Process"
-    questions: []  # TODO: populate from ILPA DDQ template
+    questions:
+      - id: investment_strategy_1
+        text: "Describe your firm's investment strategy and philosophy."
+        answer_type: text
+        required: true
+      - id: investment_strategy_2
+        text: "What is your target market segment, geography, and sector focus?"
+        answer_type: text
+        required: true
+      - id: investment_strategy_3
+        text: "Describe your investment process from sourcing to exit."
+        answer_type: text
+        required: true
+      - id: investment_strategy_4
+        text: "What is your target fund size and investment period?"
+        answer_type: text
+        required: true
+      - id: investment_strategy_5
+        text: "What is your typical deal size range?"
+        answer_type: text
+        required: true
+      - id: investment_strategy_6
+        text: "Describe your sourcing process and competitive advantages in deal origination."
+        answer_type: text
+        required: true
+      - id: investment_strategy_7
+        text: "What is your due diligence process for evaluating potential investments?"
+        answer_type: text
+        required: true
+      - id: investment_strategy_8
+        text: "Describe your portfolio construction approach, including diversification targets."
+        answer_type: text
+        required: true
+      - id: investment_strategy_9
+        text: "What is your approach to value creation post-investment?"
+        answer_type: text
+        required: true
+      - id: investment_strategy_10
+        text: "Describe your exit strategy and typical holding period."
+        answer_type: text
+        required: true
+      - id: investment_strategy_11
+        text: "How does the current fund strategy differ from prior funds?"
+        answer_type: text
+        required: true
+      - id: investment_strategy_12
+        text: "What is your approach to co-investment opportunities?"
+        answer_type: text
+        required: false
+      - id: investment_strategy_13
+        text: "Describe any use of leverage at the fund and/or portfolio company level."
+        answer_type: text
+        required: true
+      - id: investment_strategy_14
+        text: "What percentage of capital is typically invested vs. held in reserve?"
+        answer_type: numeric
+        required: false
+      - id: investment_strategy_15
+        text: "Describe your investment committee process and approval requirements."
+        answer_type: text
+        required: true
+      - id: investment_strategy_16
+        text: "What is the maximum single investment as a percentage of the fund?"
+        answer_type: numeric
+        required: true
+      - id: investment_strategy_17
+        text: "Describe any constraints on the types of investments the fund may make."
+        answer_type: text
+        required: false
+      - id: investment_strategy_18
+        text: "How do you manage currency risk in international investments?"
+        answer_type: text
+        required: false
+      - id: investment_strategy_19
+        text: "What market conditions or environments would be most challenging for your strategy?"
+        answer_type: text
+        required: true
+      - id: investment_strategy_20
+        text: "Describe your approach to sustainability integration within the investment process."
+        answer_type: text
+        required: false
 
   - id: organization
     name: "Organization & Team"
-    questions: []
+    questions:
+      - id: organization_1
+        text: "Provide an organizational chart showing all investment and non-investment professionals."
+        answer_type: text
+        required: true
+      - id: organization_2
+        text: "List all senior investment professionals, their titles, years at the firm, and years of relevant experience."
+        answer_type: list
+        required: true
+      - id: organization_3
+        text: "How many total employees does the firm have? Break down by investment, operations, compliance, and other."
+        answer_type: numeric
+        required: true
+      - id: organization_4
+        text: "Describe the ownership structure of the management company."
+        answer_type: text
+        required: true
+      - id: organization_5
+        text: "Has there been any change in ownership in the last 5 years? If so, describe."
+        answer_type: text
+        required: true
+      - id: organization_6
+        text: "Identify the key persons for the fund. What are the key person provisions?"
+        answer_type: text
+        required: true
+      - id: organization_7
+        text: "Have any key investment professionals departed in the last 3 years? If so, describe the circumstances."
+        answer_type: text
+        required: true
+      - id: organization_8
+        text: "Describe the compensation structure for investment professionals, including carried interest allocation."
+        answer_type: text
+        required: true
+      - id: organization_9
+        text: "What is the GP commitment to the fund (dollar amount and percentage)?"
+        answer_type: text
+        required: true
+      - id: organization_10
+        text: "Describe any succession planning for senior leadership."
+        answer_type: text
+        required: true
+      - id: organization_11
+        text: "List all other funds or accounts managed by the firm, including assets under management for each."
+        answer_type: list
+        required: true
+      - id: organization_12
+        text: "What is the firm's total assets under management?"
+        answer_type: numeric
+        required: true
+      - id: organization_13
+        text: "Describe any strategic partnerships, joint ventures, or affiliated entities."
+        answer_type: text
+        required: false
+      - id: organization_14
+        text: "What is the firm's policy on personal trading by employees?"
+        answer_type: text
+        required: true
+      - id: organization_15
+        text: "Describe the firm's insurance coverage (E&O, D&O, cyber, fidelity)."
+        answer_type: text
+        required: true
+      - id: organization_16
+        text: "Where are the firm's offices located? How many investment professionals are in each office?"
+        answer_type: text
+        required: true
+      - id: organization_17
+        text: "Describe any pending or anticipated organizational changes."
+        answer_type: text
+        required: false
+      - id: organization_18
+        text: "What is the firm's approach to professional development and training?"
+        answer_type: text
+        required: false
+      - id: organization_19
+        text: "Has the firm or any principal been involved in any material litigation in the past 10 years?"
+        answer_type: text
+        required: true
+      - id: organization_20
+        text: "Describe the firm's business continuity and disaster recovery plan."
+        answer_type: text
+        required: true
+      - id: organization_21
+        text: "What are the firm's work-from-home and remote work policies?"
+        answer_type: text
+        required: false
+      - id: organization_22
+        text: "List the firm's key service providers (administrator, auditor, legal counsel, prime broker, custodian)."
+        answer_type: list
+        required: true
 
   - id: track_record
     name: "Track Record & Attribution"
-    questions: []
+    questions:
+      - id: track_record_1
+        text: "Provide gross and net returns for each fund/vehicle managed by the firm since inception."
+        answer_type: text
+        required: true
+      - id: track_record_2
+        text: "Provide IRR, TVPI, DPI, and RVPI for each prior fund (for PE/VC strategies)."
+        answer_type: text
+        required: true
+      - id: track_record_3
+        text: "Provide annualized returns (1, 3, 5, 10 year and since inception) net of all fees."
+        answer_type: text
+        required: true
+      - id: track_record_4
+        text: "What is the relevant benchmark for the strategy? Provide benchmark returns for the same periods."
+        answer_type: text
+        required: true
+      - id: track_record_5
+        text: "Provide a quarterly return history for the most recent 5 years."
+        answer_type: text
+        required: true
+      - id: track_record_6
+        text: "Describe performance attribution — what drove returns in each period?"
+        answer_type: text
+        required: true
+      - id: track_record_7
+        text: "What was the fund's performance during significant market downturns (2008, 2020, 2022)?"
+        answer_type: text
+        required: true
+      - id: track_record_8
+        text: "Provide the maximum drawdown and recovery period for each fund."
+        answer_type: text
+        required: true
+      - id: track_record_9
+        text: "How many investments has the firm made across all funds? What is the realized vs. unrealized split?"
+        answer_type: text
+        required: true
+      - id: track_record_10
+        text: "List the top 5 and bottom 5 investments by return multiple. Describe lessons learned from losses."
+        answer_type: text
+        required: true
+      - id: track_record_11
+        text: "What percentage of investments have been fully or partially written off?"
+        answer_type: numeric
+        required: true
+      - id: track_record_12
+        text: "Provide dispersion of returns across individual investments."
+        answer_type: text
+        required: false
+      - id: track_record_13
+        text: "Has the track record been audited by a third party? If so, by whom?"
+        answer_type: text
+        required: true
+      - id: track_record_14
+        text: "Are the reported returns GIPS-compliant? If not, explain any deviations."
+        answer_type: boolean
+        required: true
+      - id: track_record_15
+        text: "How is unrealized portfolio valued? Describe the valuation methodology and frequency."
+        answer_type: text
+        required: true
+      - id: track_record_16
+        text: "What is the current portfolio composition by sector, geography, and vintage year?"
+        answer_type: text
+        required: true
+      - id: track_record_17
+        text: "Describe the J-curve profile of prior funds (for PE/VC strategies)."
+        answer_type: text
+        required: false
+      - id: track_record_18
+        text: "What is the consistency of returns across market cycles?"
+        answer_type: text
+        required: true
+      - id: track_record_19
+        text: "Provide Sharpe ratio, Sortino ratio, and information ratio for applicable strategies."
+        answer_type: text
+        required: false
+      - id: track_record_20
+        text: "How do you handle the track record when team members join or depart?"
+        answer_type: text
+        required: false
 
   - id: fees_terms
     name: "Fund Terms & Fees"
-    questions: []
+    questions:
+      - id: fees_terms_1
+        text: "What is the management fee rate and basis (committed capital, invested capital, NAV)?"
+        answer_type: text
+        required: true
+      - id: fees_terms_2
+        text: "Does the management fee step down over the life of the fund? If so, describe the schedule."
+        answer_type: text
+        required: true
+      - id: fees_terms_3
+        text: "What is the carried interest rate and preferred return (hurdle rate)?"
+        answer_type: text
+        required: true
+      - id: fees_terms_4
+        text: "Is carried interest calculated on a whole-fund or deal-by-deal basis?"
+        answer_type: text
+        required: true
+      - id: fees_terms_5
+        text: "Describe the GP clawback provision."
+        answer_type: text
+        required: true
+      - id: fees_terms_6
+        text: "What is the fund's distribution waterfall?"
+        answer_type: text
+        required: true
+      - id: fees_terms_7
+        text: "List all fees and expenses borne by the fund (organizational, operating, transaction, monitoring, broken deal)."
+        answer_type: list
+        required: true
+      - id: fees_terms_8
+        text: "What is the policy on transaction fees, monitoring fees, and other portfolio company fees?"
+        answer_type: text
+        required: true
+      - id: fees_terms_9
+        text: "Are any fees offset against the management fee? Describe the offset mechanism."
+        answer_type: text
+        required: true
+      - id: fees_terms_10
+        text: "What is the fund term, investment period, and any extension provisions?"
+        answer_type: text
+        required: true
+      - id: fees_terms_11
+        text: "Describe the LP advisory committee (LPAC) structure, composition, and authority."
+        answer_type: text
+        required: true
+      - id: fees_terms_12
+        text: "What are the fund's governance rights for LPs (voting, consent, removal)?"
+        answer_type: text
+        required: true
+      - id: fees_terms_13
+        text: "Describe any side letter provisions that may be offered."
+        answer_type: text
+        required: false
+      - id: fees_terms_14
+        text: "What are the provisions for key person events?"
+        answer_type: text
+        required: true
+      - id: fees_terms_15
+        text: "Describe the no-fault divorce and for-cause removal provisions."
+        answer_type: text
+        required: true
+      - id: fees_terms_16
+        text: "What is the minimum commitment size?"
+        answer_type: numeric
+        required: true
+      - id: fees_terms_17
+        text: "Are there different fee terms for different LP tiers or commitment sizes?"
+        answer_type: text
+        required: false
+      - id: fees_terms_18
+        text: "Describe the fund's recycling provisions."
+        answer_type: text
+        required: false
+      - id: fees_terms_19
+        text: "What are the transfer and secondary sale provisions for LP interests?"
+        answer_type: text
+        required: false
+      - id: fees_terms_20
+        text: "Provide a total expense ratio (TER) or total cost of ownership estimate."
+        answer_type: numeric
+        required: true
 
   - id: risk_management
     name: "Risk Management"
-    questions: []
+    questions:
+      - id: risk_management_1
+        text: "Describe your overall risk management framework and philosophy."
+        answer_type: text
+        required: true
+      - id: risk_management_2
+        text: "Who is responsible for risk management? Describe the reporting structure."
+        answer_type: text
+        required: true
+      - id: risk_management_3
+        text: "Is the risk management function independent from the investment team?"
+        answer_type: boolean
+        required: true
+      - id: risk_management_4
+        text: "What risk limits or guidelines are in place (concentration, leverage, liquidity, sector, geography)?"
+        answer_type: text
+        required: true
+      - id: risk_management_5
+        text: "How do you monitor and manage portfolio-level risk?"
+        answer_type: text
+        required: true
+      - id: risk_management_6
+        text: "Describe your approach to liquidity risk management."
+        answer_type: text
+        required: true
+      - id: risk_management_7
+        text: "What is your approach to leverage risk at the fund level?"
+        answer_type: text
+        required: true
+      - id: risk_management_8
+        text: "Describe your counterparty risk management process."
+        answer_type: text
+        required: true
+      - id: risk_management_9
+        text: "How do you monitor and manage operational risk?"
+        answer_type: text
+        required: true
+      - id: risk_management_10
+        text: "Describe any stress testing or scenario analysis performed on the portfolio."
+        answer_type: text
+        required: true
+      - id: risk_management_11
+        text: "What risk reporting is provided to investors? How frequently?"
+        answer_type: text
+        required: true
+      - id: risk_management_12
+        text: "Have there been any material risk limit breaches in the past 5 years? If so, describe."
+        answer_type: text
+        required: true
+      - id: risk_management_13
+        text: "Describe your approach to currency risk, interest rate risk, and inflation risk."
+        answer_type: text
+        required: false
+      - id: risk_management_14
+        text: "What third-party risk tools or systems do you use?"
+        answer_type: text
+        required: false
+      - id: risk_management_15
+        text: "Describe your approach to climate-related financial risk."
+        answer_type: text
+        required: false
 
   - id: compliance
     name: "Compliance & Regulatory"
-    questions: []
+    questions:
+      - id: compliance_1
+        text: "Is the firm registered with the SEC as an investment adviser? Provide CRD number."
+        answer_type: text
+        required: true
+      - id: compliance_2
+        text: "List all regulatory registrations and licenses held by the firm and its principals."
+        answer_type: list
+        required: true
+      - id: compliance_3
+        text: "Has the firm or any principal ever been subject to any regulatory investigation, enforcement action, or sanction?"
+        answer_type: text
+        required: true
+      - id: compliance_4
+        text: "Describe the firm's compliance program, including the role and reporting line of the Chief Compliance Officer."
+        answer_type: text
+        required: true
+      - id: compliance_5
+        text: "How frequently is the compliance program reviewed and tested?"
+        answer_type: text
+        required: true
+      - id: compliance_6
+        text: "Describe the firm's code of ethics and personal trading policies."
+        answer_type: text
+        required: true
+      - id: compliance_7
+        text: "What is the firm's policy on conflicts of interest? How are conflicts identified and managed?"
+        answer_type: text
+        required: true
+      - id: compliance_8
+        text: "Describe any material conflicts of interest between the GP and LPs."
+        answer_type: text
+        required: true
+      - id: compliance_9
+        text: "Does the firm have an anti-money laundering (AML) and know-your-customer (KYC) program?"
+        answer_type: boolean
+        required: true
+      - id: compliance_10
+        text: "Describe the firm's policy on political contributions and lobbying (pay-to-play)."
+        answer_type: text
+        required: true
+      - id: compliance_11
+        text: "Has the firm been audited by the SEC or other regulator in the past 5 years? If so, describe findings."
+        answer_type: text
+        required: true
+      - id: compliance_12
+        text: "Describe the firm's valuation policy and any independent valuation procedures."
+        answer_type: text
+        required: true
+      - id: compliance_13
+        text: "Who is the fund's auditor? Have there been any changes in auditor in the past 5 years?"
+        answer_type: text
+        required: true
+      - id: compliance_14
+        text: "Describe the firm's insider trading prevention policies and procedures."
+        answer_type: text
+        required: true
+      - id: compliance_15
+        text: "What is the firm's approach to ERISA compliance (if accepting plan assets)?"
+        answer_type: text
+        required: false
+      - id: compliance_16
+        text: "Describe any pending or threatened litigation involving the firm or its principals."
+        answer_type: text
+        required: true
+      - id: compliance_17
+        text: "Has the firm filed any amended ADV disclosures in the past 2 years related to disciplinary events?"
+        answer_type: boolean
+        required: true
+      - id: compliance_18
+        text: "What is the firm's whistleblower policy?"
+        answer_type: text
+        required: false
+      - id: compliance_19
+        text: "Describe the firm's record-keeping and document retention policies."
+        answer_type: text
+        required: false
+      - id: compliance_20
+        text: "Does the firm maintain a compliance calendar? Describe the key regulatory filing obligations."
+        answer_type: text
+        required: false
 
-  - id: esg
-    name: "ESG & Responsible Investing"
-    questions: []
+  - id: responsible_investing
+    name: "Responsible Investing & Sustainability"
+    questions:
+      - id: sustainability_1
+        text: "Is the firm a signatory to the UN Principles for Responsible Investment (PRI)?"
+        answer_type: boolean
+        required: true
+      - id: sustainability_2
+        text: "Describe the firm's sustainability policy and how it is integrated into the investment process."
+        answer_type: text
+        required: true
+      - id: sustainability_3
+        text: "Who is responsible for sustainability oversight? Describe the governance structure."
+        answer_type: text
+        required: true
+      - id: sustainability_4
+        text: "How are sustainability factors assessed during due diligence of potential investments?"
+        answer_type: text
+        required: true
+      - id: sustainability_5
+        text: "Describe your approach to sustainability monitoring of portfolio companies post-investment."
+        answer_type: text
+        required: true
+      - id: sustainability_6
+        text: "Does the firm have an exclusion list or negative screen? If so, describe."
+        answer_type: text
+        required: true
+      - id: sustainability_7
+        text: "Describe any sustainability-related engagement activities with portfolio companies."
+        answer_type: text
+        required: false
+      - id: sustainability_8
+        text: "What sustainability reporting is provided to investors? What frameworks or standards are used (SASB, TCFD, GRI)?"
+        answer_type: text
+        required: true
+      - id: sustainability_9
+        text: "Describe the firm's approach to climate risk assessment and TCFD alignment."
+        answer_type: text
+        required: true
+      - id: sustainability_10
+        text: "Does the firm measure and report on carbon footprint or greenhouse gas emissions?"
+        answer_type: boolean
+        required: false
+      - id: sustainability_11
+        text: "Has the firm set any net-zero or emissions reduction targets?"
+        answer_type: text
+        required: false
+      - id: sustainability_12
+        text: "Describe the firm's proxy voting policy and any sustainability-related voting guidelines."
+        answer_type: text
+        required: false
+      - id: sustainability_13
+        text: "Provide the firm's most recent PRI Assessment Report score (if applicable)."
+        answer_type: text
+        required: false
+      - id: sustainability_14
+        text: "Describe any sustainability-related controversies or incidents involving portfolio companies in the past 3 years."
+        answer_type: text
+        required: true
+      - id: sustainability_15
+        text: "How does the firm assess and manage human rights risks in the portfolio?"
+        answer_type: text
+        required: false
+      - id: sustainability_16
+        text: "Describe any impact measurement framework used by the firm."
+        answer_type: text
+        required: false
+      - id: sustainability_17
+        text: "What sustainability training is provided to investment professionals?"
+        answer_type: text
+        required: false
+      - id: sustainability_18
+        text: "Does the firm participate in any industry sustainability initiatives or working groups?"
+        answer_type: text
+        required: false
 
   - id: cybersecurity
     name: "IT & Cybersecurity"
-    questions: []
+    questions:
+      - id: cybersecurity_1
+        text: "Describe the firm's IT infrastructure and key systems used for portfolio management, trading, and operations."
+        answer_type: text
+        required: true
+      - id: cybersecurity_2
+        text: "Does the firm have a dedicated Chief Information Security Officer (CISO) or equivalent?"
+        answer_type: boolean
+        required: true
+      - id: cybersecurity_3
+        text: "Describe the firm's cybersecurity program and framework (NIST, ISO 27001, SOC 2, etc.)."
+        answer_type: text
+        required: true
+      - id: cybersecurity_4
+        text: "Has the firm undergone a third-party cybersecurity assessment or penetration test in the past 12 months?"
+        answer_type: boolean
+        required: true
+      - id: cybersecurity_5
+        text: "Describe the firm's data protection and encryption practices for data at rest and in transit."
+        answer_type: text
+        required: true
+      - id: cybersecurity_6
+        text: "What is the firm's incident response plan? Has it been tested?"
+        answer_type: text
+        required: true
+      - id: cybersecurity_7
+        text: "Has the firm experienced any cybersecurity incidents or data breaches in the past 3 years?"
+        answer_type: text
+        required: true
+      - id: cybersecurity_8
+        text: "Describe the firm's access control policies (multi-factor authentication, privileged access management)."
+        answer_type: text
+        required: true
+      - id: cybersecurity_9
+        text: "What cybersecurity training is provided to employees? How frequently?"
+        answer_type: text
+        required: true
+      - id: cybersecurity_10
+        text: "Describe the firm's vendor/third-party risk management program for technology providers."
+        answer_type: text
+        required: true
+      - id: cybersecurity_11
+        text: "Does the firm carry cyber insurance? Describe the coverage."
+        answer_type: text
+        required: false
+      - id: cybersecurity_12
+        text: "Describe the firm's data backup and disaster recovery capabilities."
+        answer_type: text
+        required: true
+      - id: cybersecurity_13
+        text: "What is the firm's policy on use of personal devices (BYOD) and remote access?"
+        answer_type: text
+        required: false
+      - id: cybersecurity_14
+        text: "How does the firm protect against social engineering and phishing attacks?"
+        answer_type: text
+        required: false
+      - id: cybersecurity_15
+        text: "Describe the firm's cloud security posture and any cloud service providers used."
+        answer_type: text
+        required: false
 
-  - id: diversity
-    name: "Diversity, Equity & Inclusion"
-    questions: []
+  # Team composition questions are included in the Organization & Team category above.
+  # Institutions can add additional team-related questions under the custom category.
 
   - id: custom
     name: "Institution-Specific Questions"
     questions: []
+    # Institutions can add custom questions here using the same format:
+    # - id: custom_1
+    #   text: "Your question here"
+    #   answer_type: text
+    #   required: true

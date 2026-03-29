@@ -1,0 +1,235 @@
+# Manager Profile Schema — v1
+# Output of /screen-managers, input to /analyze-ddq, /prep-manager-meeting, /draft-memo
+# Each screening run produces one manager-profiles.json in the workspace
+# containing an array of manager profiles.
+#
+# This schema defines the JSON structure for a single manager profile.
+
+version: "1.0"
+
+fields:
+  # Identification
+  manager_id:
+    type: string
+    description: "Unique identifier (CRD number or firm name slug)"
+    required: true
+
+  firm_name:
+    type: string
+    description: "Legal name of the investment management firm"
+    required: true
+
+  crd_number:
+    type: string
+    description: "SEC CRD number"
+    required: false
+
+  # Strategy and mandate fit
+  strategy:
+    type: string
+    description: "Investment strategy description"
+    required: true
+
+  asset_class:
+    type: string
+    description: "Primary asset class (e.g., us_small_cap_value)"
+    required: true
+
+  benchmark:
+    type: string
+    description: "Primary benchmark (e.g., russell_2000_value)"
+    required: true
+
+  # Fund data
+  aum:
+    type: number
+    description: "Assets under management in USD"
+    required: true
+
+  aum_date:
+    type: date
+    description: "As-of date for AUM figure"
+    required: true
+
+  inception_date:
+    type: date
+    description: "Fund/strategy inception date"
+    required: true
+
+  # Performance (annualized, net of fees)
+  returns:
+    type: object
+    description: "Annualized returns net of all fees"
+    required: true
+    fields:
+      ytd:
+        type: number
+        description: "Year-to-date return"
+        required: false
+      1yr:
+        type: number
+        description: "1-year annualized return"
+        required: true
+      3yr:
+        type: number
+        description: "3-year annualized return"
+        required: true
+      5yr:
+        type: number
+        description: "5-year annualized return"
+        required: true
+      10yr:
+        type: number
+        description: "10-year annualized return"
+        required: false
+      since_inception:
+        type: number
+        description: "Since-inception annualized return"
+        required: true
+
+  # Fee structure
+  fees:
+    type: object
+    description: "Fee structure summary"
+    required: true
+    fields:
+      management_fee_bps:
+        type: number
+        description: "Management fee in basis points"
+        required: true
+      performance_fee_pct:
+        type: number
+        description: "Performance/incentive fee as percentage (0 if none)"
+        required: false
+      hurdle_rate:
+        type: number
+        description: "Hurdle rate / preferred return (if applicable)"
+        required: false
+      total_expense_ratio:
+        type: number
+        description: "Total expense ratio as percentage"
+        required: false
+
+  # Team
+  team:
+    type: object
+    description: "Team summary"
+    required: false
+    fields:
+      total_employees:
+        type: integer
+        required: false
+      investment_professionals:
+        type: integer
+        required: false
+      key_persons:
+        type: array
+        description: "Key person names and titles"
+        required: false
+        items:
+          name:
+            type: string
+            required: true
+          title:
+            type: string
+            required: true
+          years_at_firm:
+            type: integer
+            required: false
+
+  # Screening results
+  screening:
+    type: object
+    description: "Results of applying fund evaluation criteria"
+    required: true
+    fields:
+      overall_result:
+        type: string
+        description: "PASS | FAIL | BORDERLINE"
+        required: true
+      screening_score:
+        type: number
+        description: "Weighted composite score (0-100)"
+        required: true
+      criteria_results:
+        type: array
+        description: "Per-criterion screening results"
+        required: true
+        items:
+          criterion:
+            type: string
+            description: "Name of the criterion (e.g., 'min_track_record_years')"
+            required: true
+          result:
+            type: string
+            description: "PASS | FAIL | BORDERLINE"
+            required: true
+          value:
+            type: string
+            description: "Actual value"
+            required: true
+          threshold:
+            type: string
+            description: "Required threshold"
+            required: true
+          notes:
+            type: string
+            required: false
+
+  # Red flag checks
+  red_flags:
+    type: object
+    description: "Results of regulatory and litigation red flag checks"
+    required: true
+    fields:
+      overall_status:
+        type: string
+        description: "CLEAR | FLAG | INCOMPLETE"
+        required: true
+      checks:
+        type: array
+        required: true
+        items:
+          source:
+            type: string
+            description: "sec_enforcement | finra_discipline | registration_status | litigation | state_enforcement"
+            required: true
+          status:
+            type: string
+            description: "CLEAR | FLAG | INCOMPLETE"
+            required: true
+          detail:
+            type: string
+            description: "Description of findings (if any)"
+            required: false
+          data_source_available:
+            type: boolean
+            description: "Whether the data source was accessible"
+            required: true
+
+  # Data provenance
+  source:
+    type: string
+    description: "Where the manager data came from (e.g., 'user_provided_csv', 'factset', 'sec_edgar')"
+    required: true
+
+  source_date:
+    type: date
+    description: "As-of date for the source data"
+    required: true
+
+  # Ranking
+  rank:
+    type: integer
+    description: "Position in the ranked screening results (1 = top)"
+    required: true
+
+  recommendation:
+    type: string
+    description: "ADVANCE | MONITOR | DECLINE"
+    required: true
+
+  recommendation_rationale:
+    type: string
+    description: "Brief explanation of the recommendation"
+    required: true

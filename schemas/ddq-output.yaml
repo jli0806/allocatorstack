@@ -1,0 +1,210 @@
+# DDQ Output Schema — v1
+# Output of /analyze-ddq, input to /draft-memo and /prep-manager-meeting
+# Each DDQ analysis run produces one ddq-output.json per manager in the workspace.
+#
+# This schema defines the JSON structure. Skills validate against it.
+
+version: "1.0"
+
+fields:
+  # Manager identification
+  manager_id:
+    type: string
+    description: "Unique identifier (CRD number or firm name slug)"
+    required: true
+
+  firm_name:
+    type: string
+    description: "Legal name of the investment management firm"
+    required: true
+
+  crd_number:
+    type: string
+    description: "SEC CRD number (if available)"
+    required: false
+
+  # Extraction metadata
+  extraction_metadata:
+    type: object
+    description: "Information about the extraction process"
+    required: true
+    fields:
+      source_file:
+        type: string
+        description: "Filename of the DDQ PDF"
+        required: true
+      extraction_date:
+        type: date
+        description: "ISO 8601 date of extraction"
+        required: true
+      total_pages:
+        type: integer
+        description: "Total pages in the source PDF"
+        required: true
+      extraction_confidence:
+        type: number
+        description: "Overall extraction confidence (0.0 - 1.0)"
+        required: true
+      questions_answered:
+        type: integer
+        description: "Number of ILPA questions with extracted answers"
+        required: true
+      questions_total:
+        type: integer
+        description: "Total ILPA questions in the taxonomy"
+        required: true
+      completeness_pct:
+        type: number
+        description: "Percentage of questions answered (0-100)"
+        required: true
+
+  # Extracted answers mapped to ILPA categories
+  questions:
+    type: array
+    description: "Extracted answers keyed by ILPA category and question ID"
+    required: true
+    items:
+      category:
+        type: string
+        description: "ILPA category ID (e.g., 'investment_strategy')"
+        required: true
+      question_id:
+        type: string
+        description: "ILPA question ID (e.g., 'investment_strategy_1')"
+        required: true
+      question_text:
+        type: string
+        description: "The question text from the ILPA taxonomy"
+        required: true
+      answer_text:
+        type: string
+        description: "Extracted answer as free text"
+        required: true
+      answer_structured:
+        type: any
+        description: "Parsed value (number, date, list, etc.) when applicable"
+        required: false
+      source_file:
+        type: string
+        description: "Source PDF filename"
+        required: true
+      source_page:
+        type: integer
+        description: "Page number in the source PDF"
+        required: true
+      confidence:
+        type: number
+        description: "Per-answer extraction confidence (0.0 - 1.0)"
+        required: true
+
+  # Gaps — questions with no answer found
+  gaps:
+    type: array
+    description: "ILPA questions that could not be answered from the DDQ"
+    required: true
+    items:
+      question_id:
+        type: string
+        required: true
+      category:
+        type: string
+        required: true
+      question_text:
+        type: string
+        required: true
+      reason:
+        type: string
+        description: "Why the answer was not found (not_addressed, unclear, incomplete)"
+        required: false
+
+  # ADV cross-reference results (merged from former /verify skill)
+  adv_cross_reference:
+    type: object
+    description: "Results of cross-referencing DDQ claims against SEC ADV filing"
+    required: false
+    fields:
+      adv_filing_date:
+        type: date
+        description: "Date of the ADV filing used for cross-reference"
+        required: true
+      crd_number:
+        type: string
+        required: true
+      checks:
+        type: array
+        description: "Individual cross-reference checks"
+        required: true
+        items:
+          field:
+            type: string
+            description: "What was checked (aum, employee_count, registration_status, disciplinary_history, fee_schedule)"
+            required: true
+          ddq_value:
+            type: string
+            description: "Value claimed in the DDQ"
+            required: true
+          adv_value:
+            type: string
+            description: "Value from the ADV filing"
+            required: true
+          result:
+            type: string
+            description: "CONFIRMED | DISCREPANCY | UNVERIFIABLE | NOT_FILED"
+            required: true
+          discrepancy_detail:
+            type: string
+            description: "Explanation of discrepancy (if result is DISCREPANCY)"
+            required: false
+          severity:
+            type: string
+            description: "HIGH | MEDIUM | LOW (for discrepancies)"
+            required: false
+
+  # Flags — anomalies, concerns, or data quality issues
+  flags:
+    type: array
+    description: "Anomalies or concerns identified during analysis"
+    required: true
+    items:
+      type:
+        type: string
+        description: "implausible_value | inconsistency | missing_required | intra_document_conflict | adv_discrepancy | incomplete_extraction"
+        required: true
+      severity:
+        type: string
+        description: "HIGH | MEDIUM | LOW"
+        required: true
+      description:
+        type: string
+        description: "Human-readable description of the flag"
+        required: true
+      question_id:
+        type: string
+        description: "Related ILPA question ID (if applicable)"
+        required: false
+      source_page:
+        type: integer
+        description: "Page number where the issue was found"
+        required: false
+
+  # Follow-up questions generated from gaps and flags
+  follow_up_questions:
+    type: array
+    description: "Suggested questions for manager follow-up"
+    required: false
+    items:
+      question:
+        type: string
+        required: true
+      reason:
+        type: string
+        description: "Why this question is being asked (gap, discrepancy, clarification)"
+        required: true
+      priority:
+        type: string
+        description: "HIGH | MEDIUM | LOW"
+        required: true
+      related_question_id:
+        type: string
+        description: "ILPA question ID that triggered this follow-up"
+        required: false

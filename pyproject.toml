@@ -1,11 +1,15 @@
+# Dependencies for AllocatorStack helper scripts.
+# This is NOT a pip-installable library — it's a Claude Code skill pack.
+# These dependencies are only needed by the scripts/ directory.
+
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
-name = "allocator-ai"
+name = "allocatorstack"
 version = "0.1.0"
-description = "Open-source AI agent framework for institutional asset allocation"
+description = "Claude Code skill pack for institutional asset allocation front offices"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.11"
@@ -13,26 +17,17 @@ authors = [
     {name = "Joyce Li"},
 ]
 dependencies = [
-    "litellm>=1.0",
     "pymupdf>=1.24",
-    "pdfplumber>=0.11",
-    "pydantic>=2.0",
-    "jinja2>=3.1",
-    "pyyaml>=6.0",
     "openpyxl>=3.1",
+    "pyyaml>=6.0",
     "requests>=2.31",
-    "pandas>=2.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
-    "pytest-cov>=5.0",
     "ruff>=0.4",
 ]
-
-[tool.setuptools.packages.find]
-where = ["src"]
 
 [tool.ruff]
 line-length = 100

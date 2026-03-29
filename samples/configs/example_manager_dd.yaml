@@ -1,46 +1,65 @@
-# Example: Manager Due Diligence pipeline config
-# Copy this file and customize for your search.
+# Example: Fund configuration for manager due diligence
+# Copy this file and customize for your fund.
+# Skills read from this config at runtime — same skills, different behavior.
 
-workflow: manager_dd
+fund_profile:
+  name: "Sample State Pension Fund"
+  type: public_pension
+  aum: 50_000_000_000
+  assumed_rate_of_return: 0.07
+  asset_class_targets:
+    us_equity: 0.30
+    intl_equity: 0.20
+    fixed_income: 0.25
+    real_assets: 0.10
+    private_equity: 0.10
+    hedge_funds: 0.05
 
+evaluation_criteria:
+  min_track_record_years: 5
+  aum_range: [1_000_000_000, 10_000_000_000]
+  max_management_fee_bps: 100
+  require_sec_registration: true
+  sustainability_policy_required: true
+  disqualifiers:
+    - sec_enforcement_action
+    - key_person_departure_within_12_months
+    - aum_discrepancy_exceeds_20_pct
+
+# Current search mandate
+search:
+  asset_class: us_small_cap_value
+  benchmark: russell_2000_value
+  target_allocation: 500_000_000
+
+# Data sources — tells skills where to pull data from.
+# Three tiers:
+#   1. MCP connector configured → skill queries the source directly
+#   2. Public API → skill uses helper scripts (SEC EDGAR, FINRA)
+#   3. No connector → skill asks user to provide data (CSV, Excel, paste)
+#
+# Set a source to "none" if your fund doesn't have access.
+# Skills adapt: they use what's available and tell you what's missing.
 data_sources:
-  ddq_directory: ./samples/data/ddqs/
-  pitch_books: ./samples/data/pitchbooks/
+  # Manager database for screening and sourcing
+  # Options: factset, pitchbook, evestment, morningstar, none
+  manager_database: none
+
+  # Market data and fundamentals
+  # Options: factset, bloomberg, lseg, none
+  market_data: none
+
+  # Private markets data
+  # Options: pitchbook, preqin, burgiss, cambridge, none
+  private_markets: none
+
+  # SEC and FINRA are always available (free public APIs)
+  # These are queried via scripts/query-edgar.py and scripts/query-finra.py
   sec_edgar: true
   finra_brokercheck: true
 
-llm:
-  provider: anthropic          # or: openai, ollama, etc. (via litellm)
-  model: claude-sonnet-4-6     # any litellm-supported model
-  # API key: set ANTHROPIC_API_KEY env var (never put keys in this file)
+  # Notes for skills to reference when asking for user-provided data
+  notes: "Export manager search results as CSV from your database. Include: firm name, strategy, AUM, inception date, returns (1/3/5yr net), benchmark, fee structure, CRD number."
 
-steps:
-  - agent: screening
-    inputs:
-      criteria:
-        asset_class: us_small_cap_value
-        min_track_record_years: 5
-        aum_range: [1_000_000_000, 10_000_000_000]
-        benchmark: russell_2000_value
-
-  - agent: ddq_analysis
-    on_failure: halt
-    verification_gate:
-      mode: blocking
-      rules:
-        - type: required_fields
-          fields: [investment_strategy, team_bios, track_record, fee_structure]
-        - type: cross_reference
-          sources: [sec_adv, finra_brokercheck]
-        - type: plausible_range
-          field: aum_total
-          min: 0
-          max: 10_000_000_000_000
-
-  - agent: comparison_matrix
-    output: ./output/comparison_matrix.xlsx
-
-  - agent: ic_memo
-    template: standard_ic_memo
-    output: ./output/ic_memo_draft.md
-    provenance: true
+# Workspace directory for skill outputs (JSON files pass between skills)
+workspace: ./workspace/
