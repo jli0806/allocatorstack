@@ -44,10 +44,26 @@ Check the output for warnings:
 
 Read the extracted text and the ILPA taxonomy (`schemas/ilpa_aima_v1.yaml`). For each DDQ:
 
-1. Match extracted text against each ILPA question category
-2. Extract the answer, noting the source file and page number
-3. Assess confidence (HIGH / MEDIUM / LOW) based on how clearly the text answers the question
-4. Flag questions with no answer found
+1. Read the full extracted text to understand the document structure (section headers, numbering scheme)
+2. For each ILPA question, search the extracted text for the corresponding answer. Match by:
+   - Section numbering (e.g., "1.1" maps to investment_strategy_1)
+   - Section headers (e.g., "Investment Strategy" maps to the investment_strategy category)
+   - Keyword matching when numbering doesn't align (e.g., "key person" maps to organization_6)
+3. Extract the answer text, noting source file and page number
+4. Score confidence using this rubric:
+
+**Confidence scoring rubric:**
+
+| Score | Meaning | When to use |
+|-------|---------|-------------|
+| 1.0 (HIGH) | Direct, unambiguous answer | DDQ has a numbered section that clearly matches the ILPA question, with substantive text |
+| 0.8 | Good answer, minor ambiguity | Answer found but under a different section header, or answer addresses most but not all parts of the question |
+| 0.6 (MEDIUM) | Partial answer | Related information exists but doesn't directly answer the question, or answer is vague/generic |
+| 0.4 | Inferred answer | No explicit answer, but information can be inferred from other sections |
+| 0.2 (LOW) | Minimal signal | Only a passing reference found, or answer appears contradicted elsewhere |
+| 0.0 | Not found | No relevant text found anywhere in the DDQ -- add to gaps list |
+
+5. Flag questions with no answer found (confidence 0.0) as gaps
 
 Write structured output to `workspace/<run-id>/ddq-output.json`.
 Output format must follow `schemas/ddq-output.yaml`.
@@ -93,8 +109,31 @@ Include a summary of ADV cross-reference results:
 
 If more than one DDQ was ingested, produce a comparison matrix showing how each manager answered the same questions. Flag:
 - **Gaps**: where one manager answered but another didn't
-- **Discrepancies**: where answers seem inconsistent with other data or with the manager's own ADV
-- **Outliers**: fee structures, AUM, or performance numbers that are significantly different
+- **Inconsistencies**: where answers conflict with other data in the same DDQ
+- **Outliers**: fee structures, AUM, or performance numbers that are significantly different from peers
+
+Also produce an Excel-compatible comparison file for optional Excel output:
+
+```bash
+python scripts/generate-excel.py workspace/<run-id>/comparison.json --output workspace/<run-id>/comparison.xlsx
+```
+
+The `comparison.json` format expected by the Excel script:
+```json
+{
+  "managers": [
+    {
+      "manager": "Granite Peak Capital",
+      "answers": [
+        {"question_text": "Investment Strategy", "answer": "Concentrated value, US small/mid-cap", "confidence": "HIGH"},
+        {"question_text": "AUM", "answer": "$4.3B", "confidence": "HIGH"}
+      ]
+    }
+  ]
+}
+```
+
+Select the most important ~30 questions for the comparison (strategy, AUM, returns, fees, team size, key risks) rather than all 150+.
 
 ### Step 7: Generate follow-up questions
 
@@ -111,7 +150,9 @@ Present the completeness dashboard, flagged issues (gaps, outliers, inconsistenc
 ## Output
 
 All files written to `workspace/<run-id>/`:
-- `ddq-output.json` -- structured extraction for each manager (includes ADV cross-reference). Schema: `schemas/ddq-output.yaml`
-- `completeness-dashboard.md` -- coverage summary with ADV cross-ref results
-- `comparison-matrix.md` -- side-by-side (if multiple DDQs)
+- `ddq-output.json` -- structured extraction for each manager. Schema: `schemas/ddq-output.yaml`
+- `completeness-dashboard.md` -- coverage summary by ILPA category
+- `comparison-matrix.md` -- side-by-side comparison (if multiple DDQs)
+- `comparison.json` -- Excel-compatible comparison data (if multiple DDQs)
+- `comparison.xlsx` -- Excel comparison matrix (optional, generated via script)
 - `follow-up-questions.md` -- generated questions for on-site visits

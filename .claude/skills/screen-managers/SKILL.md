@@ -39,12 +39,12 @@ Check `data_sources` in the fund config to determine how to get manager data.
 Query the connected data source for managers matching the mandate criteria.
 
 **If no connector** (e.g., `manager_database: none`):
-Ask the user to provide candidate data. Reference the `notes` field in the fund config for specific instructions. Accept CSV, Excel, or pasted data. Tell the user what fields are needed:
+Ask the user to provide candidate data. A sample CSV is available at `samples/candidate-data.csv` for reference. Accept CSV, Excel, or pasted data. Required fields:
 - Firm name, strategy, AUM, inception date
 - Returns: 1yr, 3yr, 5yr (net of fees)
 - Benchmark
 - Fee structure (management fee, performance fee if applicable)
-- CRD number (needed for regulatory checks)
+- CRD number (for regulatory checks — optional but recommended)
 
 ### Step 3: Normalize and compare
 
@@ -78,9 +78,27 @@ Filter managers against the mandate criteria. For each: **PASS** | **FAIL** | **
 
 Generate a comparison matrix with rankings, rationale, red flag summary, and data sources.
 
-Optionally generate Excel:
+Optionally generate an Excel comparison matrix:
 ```bash
 python scripts/generate-excel.py workspace/<run-id>/screening-output.json --output workspace/<run-id>/screening-matrix.xlsx
+```
+
+The `screening-output.json` format for the Excel script:
+```json
+{
+  "managers": [
+    {
+      "manager": "Granite Peak Capital",
+      "answers": [
+        {"question_text": "Strategy", "answer": "US Small-Cap Value", "confidence": "HIGH"},
+        {"question_text": "AUM", "answer": "$4.3B", "confidence": "HIGH"},
+        {"question_text": "1yr Return (Net)", "answer": "14.2%", "confidence": "HIGH"},
+        {"question_text": "Mgmt Fee", "answer": "85 bps", "confidence": "HIGH"},
+        {"question_text": "Red Flags", "answer": "CLEAR", "confidence": "HIGH"}
+      ]
+    }
+  ]
+}
 ```
 
 ## HUMAN GATE

@@ -30,18 +30,31 @@ Write output to the same `workspace/<run-id>/` directory as the DDQ extraction, 
 
 ### Step 1: Draft quantitative sections
 
-For each quantitative section (track record, fees, portfolio fit, peer comparison):
-1. Pull data from workspace JSON files
-2. Build tables with actual numbers
-3. Add provenance notation: `[Source: manager-ddq.pdf, p.12]` or `[Source: SEC ADV Item 5.F]`
-4. Flag any data points where the ADV cross-reference found discrepancies
+Map DDQ output fields to memo sections using this guide:
+
+| Memo Section | Data Source | DDQ Output Fields |
+|---|---|---|
+| Strategy Overview | ddq-output.json | questions where category = `investment_strategy` |
+| Track Record Analysis | ddq-output.json | questions where category = `track_record` |
+| Fee Analysis | ddq-output.json | questions where category = `fees_terms` |
+| Operational DD Summary | ddq-output.json | questions where category = `organization`, `cybersecurity` |
+| Risk Factors | ddq-output.json | questions where category = `risk_management` + flags array |
+| Compliance Summary | ddq-output.json | questions where category = `compliance` |
+| Portfolio Fit | fund config | evaluation_criteria + fund_profile.asset_class_targets |
+| Comparison to Peers | manager-profiles.json | screening.criteria_results, returns, fees |
+
+For each section:
+1. Filter the `questions` array from ddq-output.json by the relevant category
+2. Build tables with actual numbers from `answer_text` and `answer_structured`
+3. Add provenance: `[Source: {source_file}, p.{source_page}]` using fields from each question entry
+4. Note any flags from the `flags` array that relate to this section
 
 ### Step 2: Draft qualitative sections with placeholders
 
-For sections requiring investment judgment:
+These sections require investment judgment — draft what you can from the data, mark the rest:
 - **Executive Summary** -- `[PM TO COMPLETE -- summarize thesis and recommendation]`
 - **Investment Thesis** -- `[PM TO COMPLETE -- articulate why this manager]`
-- **Risk Factors** -- Draft from DDQ data, but mark `[PM TO REVIEW AND COMPLETE]`
+- **Risk Factors** -- Draft from DDQ risk_management answers and flags, mark `[PM TO REVIEW AND COMPLETE]`
 - **Recommendation** -- `[PM TO COMPLETE -- recommend / do not recommend / further DD needed]`
 
 ### Step 3: Add verification summary

@@ -1,0 +1,9 @@
+firm_name,strategy,aum,inception_date,returns_1yr,returns_3yr,returns_5yr,benchmark,management_fee_bps,performance_fee_pct,crd_number
+Granite Peak Capital,US Small Cap Deep Value,3200000000,2009-06-15,0.142,0.098,0.112,Russell 2000 Value,75,0,106838
+Meridian Value Partners,US Small Cap Value Quality,5800000000,2004-03-01,0.118,0.087,0.094,Russell 2000 Value,80,0,105377
+Osprey Global Advisors,US Small Cap Contrarian Value,1700000000,2012-11-01,0.156,0.105,0.121,Russell 2000 Value,85,10,112350
+Timberline Asset Management,US Small Cap Value Momentum,4500000000,2007-09-10,0.103,0.076,0.088,Russell 2000 Value,70,0,110245
+Ridgeline Capital Group,US Small Cap Relative Value,780000000,2015-04-22,0.131,0.091,0.097,Russell 2000 Value,90,0,128127
+Summit Rock Investments,US Small Cap Deep Value Activist,7200000000,2001-01-15,0.089,0.068,0.079,Russell 2000 Value,60,15,108784
+Cottonwood Creek Partners,US Small Cap Value,1100000000,2023-08-01,0.168,,,Russell 2000 Value,95,0,116138
+Ironwood Capital Advisors,US Small Cap Systematic Value,2400000000,2011-07-20,0.127,0.093,0.101,Russell 2000 Value,100,0,119612

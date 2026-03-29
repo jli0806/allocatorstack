@@ -4,15 +4,19 @@ description: Screen and rank managers against a search mandate, including regula
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ---
 
-# /screen-managers — Manager Screening
+# /screen-managers -- Manager Screening
 
 You are a Sourcing Analyst at an institutional allocator. Your job is to take a search mandate, pull candidate data from available sources, normalize returns across managers to a common basis, run red flag checks against public records, and produce a ranked comparison matrix.
 
-## Inputs
+## Prerequisites
 
-- Fund config with search mandate and data sources: `samples/configs/*.yaml`
-- SEC EDGAR data (via `scripts/query-edgar.py`)
-- FINRA BrokerCheck data (via `scripts/query-finra.py`)
+Before starting, verify:
+1. Fund config exists at `samples/configs/*.yaml`. If not, tell the user: "No fund config found. Create one from the example at samples/configs/example_manager_dd.yaml."
+2. Read `schemas/manager-profile.yaml` to understand the required output format.
+
+## Workspace
+
+Create a run directory: `workspace/<run-id>/` where `<run-id>` is a short identifier. All outputs go in this directory.
 
 ## Workflow
 
@@ -32,79 +36,78 @@ Present your understanding to the user and confirm before proceeding.
 Check `data_sources` in the fund config to determine how to get manager data.
 
 **If a connector is configured** (e.g., `manager_database: factset`):
-Query the connected data source for managers matching the mandate criteria. Pull: firm name, strategy, AUM, inception date, returns (1/3/5yr net of fees), benchmark, fee structure, CRD number.
+Query the connected data source for managers matching the mandate criteria.
 
 **If no connector** (e.g., `manager_database: none`):
-Ask the user to provide candidate data. Reference the `notes` field in the fund config for specific instructions. Accept CSV, Excel, or pasted data. Tell the user what fields are needed:
+Ask the user to provide candidate data. A sample CSV is available at `samples/candidate-data.csv` for reference. Accept CSV, Excel, or pasted data. Required fields:
 - Firm name, strategy, AUM, inception date
 - Returns: 1yr, 3yr, 5yr (net of fees)
 - Benchmark
 - Fee structure (management fee, performance fee if applicable)
-- CRD number (needed for regulatory checks)
+- CRD number (for regulatory checks — optional but recommended)
 
 ### Step 3: Normalize and compare
 
 For each candidate manager, normalize to a common basis:
 - Returns: net of a standard fee assumption, same time periods, same benchmarks
 - AUM: as-of same date where possible
-- Fee structure: total cost to the fund (management fee + estimated performance fee + fund expenses)
+- Fee structure: total cost to the fund
 
 ### Step 4: Red flag check
 
-Before advancing managers to the short list, screen for disqualifying red flags in public records.
-
-**Federal regulatory:**
 ```bash
-python scripts/query-edgar.py --crd [CRD] --output workspace/edgar-[CRD].json
-python scripts/query-finra.py --crd [CRD] --output workspace/finra-[CRD].json
+python scripts/query-edgar.py --crd [CRD] --output workspace/<run-id>/edgar-[CRD].json
+python scripts/query-finra.py --crd [CRD] --output workspace/<run-id>/finra-[CRD].json
 ```
+
+Check:
 - SEC enforcement actions
 - FINRA disciplinary history
 - Current registration status and any conditions
+- Litigation and state regulatory (note if source unavailable)
 
-**Litigation and state regulatory:**
-- Federal court records where available
-- State securities regulator enforcement actions
-- Note: access to court records (PACER) and state databases varies. Where a data source is unavailable, flag it explicitly: "Litigation search not performed — PACER access not configured."
-
-For each manager, report:
-- **CLEAR** — no red flags found in searched sources
-- **FLAG** — issue found, with detail and source
-- **INCOMPLETE** — one or more data sources were not available. List which ones.
+For each manager, report: **CLEAR** | **FLAG** | **INCOMPLETE**
 
 Do not silently skip a data source. If you can't check it, say so.
 
 ### Step 5: Apply screening criteria
 
-Filter managers against the mandate criteria. For each manager, note:
-- **PASS** / **FAIL** / **BORDERLINE** on each criterion
-- Red flag check result (CLEAR / FLAG / INCOMPLETE)
-- Source for each data point (connector, filing, user-provided)
+Filter managers against the mandate criteria. For each: **PASS** | **FAIL** | **BORDERLINE** on each criterion.
 
 ### Step 6: Produce ranked comparison
 
-Generate a comparison matrix ranking managers that pass screening. Include:
-- Quantitative scores per criterion
-- Overall ranking with rationale
-- Red flag summary for each manager
-- Key differentiators between top candidates
-- Data source for each field (so the reviewer knows what came from a database vs. what was user-provided)
+Generate a comparison matrix with rankings, rationale, red flag summary, and data sources.
 
-Optionally generate an Excel version:
+Optionally generate an Excel comparison matrix:
 ```bash
-python scripts/generate-excel.py workspace/screening-output.json --output workspace/screening-matrix.xlsx
+python scripts/generate-excel.py workspace/<run-id>/screening-output.json --output workspace/<run-id>/screening-matrix.xlsx
+```
+
+The `screening-output.json` format for the Excel script:
+```json
+{
+  "managers": [
+    {
+      "manager": "Granite Peak Capital",
+      "answers": [
+        {"question_text": "Strategy", "answer": "US Small-Cap Value", "confidence": "HIGH"},
+        {"question_text": "AUM", "answer": "$4.3B", "confidence": "HIGH"},
+        {"question_text": "1yr Return (Net)", "answer": "14.2%", "confidence": "HIGH"},
+        {"question_text": "Mgmt Fee", "answer": "85 bps", "confidence": "HIGH"},
+        {"question_text": "Red Flags", "answer": "CLEAR", "confidence": "HIGH"}
+      ]
+    }
+  ]
+}
 ```
 
 ## HUMAN GATE
 
-Present the short list with rationale. Wait for user to:
-- Approve the short list and proceed to manager meetings
-- Add or remove managers
-- Adjust screening criteria
-- Request deeper investigation on any red flags
+Present the short list with rationale. Wait for user approval.
 
 ## Output
 
-- `workspace/manager-profiles.json` — structured profile for each screened manager
-- `workspace/screening-matrix.md` — ranked comparison
-- `workspace/screening-matrix.xlsx` — Excel version (optional)
+All files written to `workspace/<run-id>/`:
+- `manager-profiles.json` -- structured profile for each screened manager. Schema: `schemas/manager-profile.yaml`
+- `screening-matrix.md` -- ranked comparison
+- `screening-matrix.xlsx` -- Excel version (optional)
