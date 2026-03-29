@@ -103,6 +103,14 @@ Three synthetic DDQ PDFs in `samples/ddqs/`:
 
 Sample candidate data for screening: `samples/candidate-data.csv` (8 managers, including pass/fail/borderline cases).
 
+Expected output from running the pipeline on these samples: `samples/expected-output/`. These are simplified examples on synthetic data -- real institutional DDQs are 40-80 pages with dense narrative, and the analysis is correspondingly deeper.
+
+## Scope
+
+AllocatorStack covers **manager selection, due diligence, and monitoring** -- the document-heavy, judgment-heavy workflows where analysts spend most of their time.
+
+It does not cover portfolio management, trading, risk analytics, or asset allocation optimization. Those are quantitative, real-time problems that need specialized systems (Aladdin, FactSet, Bloomberg PORT). Claude skills are the wrong tool for that work and the right tool for reading DDQs, comparing managers, drafting memos, and monitoring regulatory filings.
+
 ## See It Work
 
 ```
