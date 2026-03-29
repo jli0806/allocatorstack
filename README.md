@@ -1,38 +1,37 @@
 # AllocatorStack
 
-Claude Code skills for institutional asset allocation.
+Claude skills for allocator front-office operations.
 
-Drop in DDQ PDFs from multiple managers. Get a structured side-by-side comparison mapped to the ILPA taxonomy, a completeness dashboard showing gaps and outliers, and a draft IC memo with provenance on every number. Each skill maps to a role in an investment office. Humans review at every stage.
+Drop in DDQ PDFs from multiple managers. Get a structured side-by-side comparison mapped to the ILPA taxonomy, a completeness dashboard showing what's missing, and a first-draft IC memo with provenance on every number. Each skill encodes the workflow of a specific role in an investment office. Humans review at every stage.
 
 ## Quick Start
 
 ```bash
-# Clone and install
 git clone https://github.com/jli0806/allocatorstack.git
 cd allocatorstack
 pip install pymupdf requests openpyxl
 
-# Run the demo (extracts 3 sample DDQs)
+# Extract 3 sample DDQs
 ./demo
 
-# Then open Claude Code and run the full pipeline:
-# /analyze-ddq     <- maps DDQ answers to ILPA taxonomy, cross-refs against ADV
-# /draft-memo      <- generates IC memo with provenance links
+# Then in Claude, run the pipeline:
+# /analyze-ddq     <- map DDQ answers to ILPA taxonomy, flag gaps and outliers
+# /draft-memo      <- generate IC memo with provenance links
 ```
 
-The demo extracts text from 3 synthetic DDQ PDFs (Granite Peak Capital, Meridian Value Partners, Osprey Global Advisors) and shows the ILPA-structured content. Then use Claude Code skills to analyze, compare, and draft.
+## Why This Matters
 
-## Why This Exists
+Without a skill, asking Claude to "analyze this DDQ" produces different output every time -- different structure, different things flagged, no consistent schema. There's no way to compare two managers on the same basis, no provenance chain, no pipeline that passes structured data from one stage to the next.
 
-Investment professionals at pension funds, endowments, and foundations spend 60-75% of their time on data gathering and document production -- reading 50-page DDQs, cross-referencing SEC filings, normalizing fee structures across managers, assembling IC memos from scattered sources. Only 10-15% goes to the judgment work that justifies their expertise.
+A SKILL.md file encodes the full workflow: extract text with page numbers, map answers to the ILPA/AIMA taxonomy, score confidence per answer, generate a completeness dashboard by category, flag gaps and outliers, pause for the analyst to review before proceeding. Output goes to a defined JSON schema that the next skill reads directly.
 
-AllocatorStack puts that operational knowledge into Claude Code skills so the analyst's time goes to judgment instead of assembly. Open source, on-prem. The AI comes to the data, not the data to the AI.
+A CIO can open a SKILL.md, read it in five minutes, and understand what the agent does, what it produces, and where it pauses for human review. A Python library with the same behavior spread across 20 files does not offer that.
 
 ## Skills
 
 ### Manager Due Diligence Pipeline
 
-Run these in order. Each produces JSON that the next one reads.
+Each skill produces JSON that the next one reads. Human review between stages.
 
 ```
 /screen-managers  -->  /prep-manager-meeting  -->  /analyze-ddq  -->  /draft-memo
@@ -40,60 +39,61 @@ Run these in order. Each produces JSON that the next one reads.
 
 | Skill | Role | What It Does |
 |-------|------|-------------|
-| `/screen-managers` | Sourcing Analyst | Takes a search mandate, screens candidates against fund criteria and public records (regulatory, litigation), produces a ranked short list |
-| `/prep-manager-meeting` | Research Analyst | Prepares agendas, talking points, and reference packets for meetings with shortlisted managers |
+| `/screen-managers` | Sourcing Analyst | Takes a search mandate, screens candidates against fund criteria and public records, produces a ranked short list |
+| `/prep-manager-meeting` | Research Analyst | Prepares agendas, talking points, and reference packets for manager meetings |
 | `/analyze-ddq` | DDQ Reviewer | Ingests DDQ PDFs, extracts answers mapped to ILPA categories, compares across managers, flags gaps and outliers |
-| `/draft-memo` | IC Memo Drafter | Assembles first-draft IC memo from pipeline data, with provenance links on every claim |
+| `/draft-memo` | IC Memo Drafter | Assembles first-draft IC memo from pipeline data, with provenance on every claim |
 
 ### Quarterly Monitoring
 
 | Skill | Role | What It Does |
 |-------|------|-------------|
-| `/monitor-adv` | Compliance Analyst | Diffs ADV filings against prior snapshots, scans news and regulatory actions, flags exceptions by severity |
+| `/monitor-adv` | Compliance Analyst | Diffs ADV filings against prior snapshots, scans regulatory actions, flags exceptions by severity |
 
 ### Additional Skills (v0.2)
 
 | Skill | Role | What It Does |
 |-------|------|-------------|
 | `/prep-company-meeting` | Research Analyst | Briefing packets for direct company meetings -- governance, financials, engagement topics |
-| `/screen-holdings` | RI / Forensic Analyst | Screens holdings for responsible investing risks and forensic accounting red flags |
+| `/screen-holdings` | Sustainability / Forensic Analyst | Screens holdings for responsible investing risks and forensic accounting red flags |
 | `/board-report` | Board Reporting | Board-ready reports with technical sections for the IC and plain-language summaries for trustees |
 
 ## How It Works
 
-Skills are SKILL.md files in `.claude/skills/` -- instructions Claude Code follows to do specific allocator work. Four helper scripts (~340 lines Python total) handle what Claude can't do natively:
+Skills are SKILL.md files -- instructions Claude follows to do specific allocator work. Four helper scripts (~400 lines Python total) handle things Claude can't do natively: parsing PDF binaries, calling rate-limited government APIs, generating Excel files. Everything else -- the reading comprehension, the taxonomy mapping, the comparison, the memo drafting -- Claude does directly.
 
-- `scripts/extract-pdf.py` -- PDF text extraction with page numbers (PyMuPDF)
-- `scripts/query-edgar.py` -- SEC EDGAR / IAPD API queries
-- `scripts/query-finra.py` -- FINRA BrokerCheck API queries
-- `scripts/generate-excel.py` -- Excel comparison matrix output
+Skills chain through JSON files in a workspace directory. Schemas define the contracts between stages. The ILPA/AIMA DDQ taxonomy provides a 150+ question framework that makes DDQs from different managers comparable on the same basis.
 
-Skills chain through JSON files in a workspace directory. Schemas define the contracts between stages (`schemas/ddq-output.yaml`, `schemas/manager-profile.yaml`). The ILPA/AIMA DDQ taxonomy (`schemas/ilpa_aima_v1.yaml`) provides a 150+ question framework for structured DDQ analysis.
+## Deployment
+
+Install the skills in any Claude plan that supports custom skills -- Max, Team, or Enterprise. Admin uploads the skill files, provisions to the investment team. The end user opens Claude, drops in a DDQ, and runs `/analyze-ddq`. No server, no CI/CD, no infrastructure.
+
+For development and testing, clone the repo and run skills through Claude Code.
 
 ## Data Sources
 
-Skills pull data from three tiers, depending on what the fund has available:
+Skills pull data from three tiers:
 
-1. **MCP connector configured** (FactSet, PitchBook, Morningstar, etc.) -- skill queries the source directly
-2. **Public API** (SEC EDGAR, FINRA BrokerCheck) -- skill uses helper scripts, always available
-3. **No connector** -- skill asks the user to provide data as CSV, Excel, or paste
+1. **MCP connector** (FactSet, PitchBook, Morningstar) -- skill queries the source directly
+2. **Public API** (SEC EDGAR, FINRA BrokerCheck) -- always available via helper scripts
+3. **User-provided** (CSV, Excel, paste) -- the fallback when no connector exists
 
-The fund config specifies which connectors are set up. Skills adapt and tell you what's missing.
+The fund config specifies which connectors are set up. Skills use what's available and tell you what's missing. A fund with no connectors runs the full pipeline -- they provide their own data at the screening step.
 
 ## Customization
 
-Copy `samples/configs/example_manager_dd.yaml` and customize for your fund:
+Each fund provides configuration in YAML, not code:
 
 - **Fund profile** -- type, AUM, asset class targets, assumed rate of return
 - **Evaluation criteria** -- track record minimums, AUM ranges, fee thresholds, disqualifiers
-- **Data sources** -- which MCP connectors are configured
-- **Templates** -- IC memo, board report, screening report (in `templates/`)
+- **Data sources** -- which connectors are configured
+- **Templates** -- IC memo, board report, screening report
 
-Same skills, different config, different output.
+Same skills, different config, different output. See `samples/configs/example_manager_dd.yaml`.
 
 ## Sample DDQs
 
-Three synthetic DDQ PDFs in `samples/ddqs/` for testing and demo:
+Three synthetic DDQ PDFs in `samples/ddqs/`:
 
 | Manager | Profile | Key Features |
 |---------|---------|-------------|
@@ -101,16 +101,9 @@ Three synthetic DDQ PDFs in `samples/ddqs/` for testing and demo:
 | Meridian Value Partners | Borderline | Incomplete sections, key person departure, sparse risk management |
 | Osprey Global Advisors | Red flags | 350 bps TER, no hurdle rate, risk limit breaches, cybersecurity incident |
 
-## Design Principles
-
-1. **Agents draft, humans decide.** Every output is a draft for human review. No automated investment decisions.
-2. **Show your work.** Every number traces to its source -- `[Source: manager-ddq.pdf, p.12]`.
-3. **Fail loudly.** Missing data and implausible results are flagged, never silently passed.
-4. **Verification gates.** Human review between pipeline stages.
+Sample candidate data for screening: `samples/candidate-data.csv` (8 managers, including pass/fail/borderline cases).
 
 ## See It Work
-
-Here's what running `/analyze-ddq` on the sample DDQs looks like:
 
 ```
 > /analyze-ddq
@@ -139,16 +132,28 @@ Flags:
 HUMAN GATE: Review the extraction before proceeding to /draft-memo.
 ```
 
-See `docs/skills.md` for detailed walkthroughs of every skill.
+## How This Ages
+
+Traditional AI applications write orchestration code to chain LLM calls, parse outputs, manage state. When the model improves, that code becomes a constraint -- doing worse what the model would now do natively.
+
+SKILL.md files are instructions. When Claude improves, the skills improve with it. The only maintained code is four helper scripts for things Claude genuinely cannot do today: parsing PDF binaries, calling rate-limited APIs, generating Excel files. That list gets shorter over time, not longer.
+
+| | Traditional AI app | AllocatorStack |
+|---|---|---|
+| Code to maintain | Thousands of lines | ~400 lines across 4 scripts |
+| Deployment | Server, CI/CD, hosting | Upload skill files |
+| Updates | Release cycle, versioning | Edit the markdown file |
+| Customization | Code changes | Edit YAML config |
+| Who can modify | Developers | Anyone who can read the SKILL.md |
 
 ## Documentation
 
 | Doc | What It Covers |
 |-----|---------------|
-| [ETHOS.md](ETHOS.md) | Design philosophy -- why every decision was made |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Technical design -- why a skill pack, not a library |
-| [docs/skills.md](docs/skills.md) | Deep dives on every skill with examples |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Developer guide -- how to add skills and scripts |
+| [ETHOS.md](ETHOS.md) | Design philosophy |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Technical design decisions |
+| [docs/skills.md](docs/skills.md) | Skill deep dives with examples |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Developer guide |
 | [CHANGELOG.md](CHANGELOG.md) | Release notes |
 
 ## Testing
@@ -162,7 +167,7 @@ pytest tests/ -v
 
 ## Related
 
-- [manager-ADV-parsing](https://github.com/jli0806/manager-ADV-parsing) -- Standalone SEC ADV monitoring app (Streamlit). The `/monitor-adv` skill integrates this functionality.
+- [manager-ADV-parsing](https://github.com/jli0806/manager-ADV-parsing) -- Standalone SEC ADV monitoring app (Streamlit). The `/monitor-adv` skill integrates this.
 
 ## License
 

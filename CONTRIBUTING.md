@@ -1,6 +1,6 @@
 # Contributing
 
-AllocatorStack is open source and welcomes contributions. Here's how to get started.
+AllocatorStack is open source. Contributions welcome.
 
 ## Quick Start
 

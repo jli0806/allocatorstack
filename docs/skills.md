@@ -185,7 +185,7 @@ The short-listed managers have returned their DDQs. You need to read three 80-pa
 
 #### What it does
 
-Generates a first-draft Investment Committee memo from the structured data produced by the rest of the pipeline. Every quantitative claim -- every return number, AUM figure, fee calculation -- includes a provenance link back to its source (DDQ page number, ADV item, screening output). Sections requiring investment judgment are clearly marked with `[PM TO COMPLETE]` placeholders. The memo adapts to whatever data is available: full pipeline output produces a comprehensive memo; DDQ extraction alone produces a lighter version with more placeholders.
+Generates a first-draft Investment Committee memo from the structured data produced by the rest of the pipeline. Every quantitative claim -- every return number, AUM figure, fee calculation -- includes a provenance link back to its source (DDQ page number, ADV item, screening output). Sections requiring investment judgment are clearly marked with `[PM TO COMPLETE]` placeholders. The memo adapts to whatever data is available: full pipeline output produces a complete memo; DDQ extraction alone produces a lighter version with more placeholders.
 
 #### When to use it
 

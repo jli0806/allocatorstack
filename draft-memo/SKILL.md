@@ -18,7 +18,7 @@ Before starting, verify:
 The memo adapts to whatever data is available:
 - DDQ extraction only -- lighter memo, more "[TO COMPLETE]" sections
 - DDQ + screening data -- fuller memo with screening rationale and peer comparison
-- Full pipeline output -- comprehensive memo
+- Full pipeline output -- complete memo
 
 Report what data is available and what sections will be auto-populated vs. need human input.
 

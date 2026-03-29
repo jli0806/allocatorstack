@@ -23,7 +23,7 @@ You are a Board Reporting Specialist at an institutional allocator. Your job is 
 ### Step 1: Assess available data
 
 Check what data is available in the workspace and from the user. The report adapts:
-- Full data → comprehensive report
+- Full data → complete report
 - Partial data → report with clearly marked gaps and "[DATA NEEDED]" placeholders
 
 ### Step 2: Build technical sections
