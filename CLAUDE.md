@@ -24,7 +24,7 @@ Run these in order. Each skill produces JSON output that the next skill reads.
 ### Additional Skills (v0.2)
 
 - `/prep-company-meeting` -- Briefing packets for direct company meetings
-- `/screen-holdings` -- Responsible investing + forensic accounting screening
+- `/screen-holdings` -- Sustainable investing + forensic accounting screening
 - `/board-report` -- Board-ready reports with trustee summaries
 
 ## Workspace Convention
@@ -60,21 +60,70 @@ Install dependencies: `pip install pymupdf requests openpyxl`
 
 ## Schemas
 
-- `schemas/ilpa_aima_v1.yaml` -- 162 ILPA DDQ questions across 9 categories
+- `schemas/ilpa_aima_v1.yaml` -- 150+ ILPA DDQ questions across 8 categories
 - `schemas/ddq-output.yaml` -- Output format of /analyze-ddq
 - `schemas/manager-profile.yaml` -- Output format of /screen-managers
 
 ## Design Principles
 
-1. **Agents draft, humans decide.** Every output is a draft for human review.
+1. **Agents draft, humans decide.** Every output is a draft for human review. No automated investment decisions.
 2. **Show your work.** Every number traces to its source with `[Source: file, page]` notation.
 3. **Fail loudly.** Missing data and implausible results get flagged, never silently passed.
 4. **Verification gates.** Human review between pipeline stages.
 
+Read `ETHOS.md` for the full philosophy behind these principles.
+
+## Provenance Notation
+
+All skills use this format for source citations:
+
+```
+[Source: granite-peak-capital-ddq.pdf, p.12]
+[Source: SEC ADV Item 5.F, filed 2025-12-31]
+[Source: FINRA BrokerCheck, CRD 287456]
+[Source: user-provided CSV, row 3]
+```
+
+When generating output, always include provenance. When a data source was unavailable, note it explicitly:
+
+```
+Litigation search: INCOMPLETE -- PACER access not configured
+```
+
+## Skill Development
+
+Skill definitions live in `.claude/skills/{skill-name}/SKILL.md`. Each skill follows a standard structure:
+
+1. **YAML frontmatter** -- name, description, allowed-tools
+2. **Prerequisites** -- verify inputs exist before running
+3. **Workspace** -- where to write output
+4. **Workflow** -- numbered steps Claude follows
+5. **HUMAN GATE** -- pause for review before finalizing
+6. **Output** -- list of files produced with schema references
+
+When creating or editing skills:
+- Reference schemas (`schemas/*.yaml`) for output formats -- don't redefine structure inline
+- Use `workspace/<run-id>/` paths for all output
+- Include `[Source: ...]` provenance on every data point
+- Never skip a data source silently -- if you can't check it, say so
+- Mark judgment sections with `[PM TO COMPLETE]` placeholders
+
 ## Testing
 
 ```bash
-pytest tests/
+pytest tests/ -v
 ```
 
-Sample DDQs for testing: `samples/ddqs/` (3 synthetic PDFs).
+45 tests covering all 4 helper scripts. Sample DDQs in `samples/ddqs/` serve as test fixtures. API tests use mocks -- no real SEC/FINRA calls.
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `ETHOS.md` | Design philosophy and principles |
+| `ARCHITECTURE.md` | Technical design decisions |
+| `CONTRIBUTING.md` | Developer guide |
+| `CHANGELOG.md` | Release notes |
+| `TODOS.md` | Roadmap |
+| `docs/skills.md` | Skill deep dives with examples |
+| `docs/positioning.md` | Value prop and messaging |

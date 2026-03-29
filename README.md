@@ -68,7 +68,7 @@ Skills are SKILL.md files in `.claude/skills/` -- instructions Claude Code follo
 - `scripts/query-finra.py` -- FINRA BrokerCheck API queries
 - `scripts/generate-excel.py` -- Excel comparison matrix output
 
-Skills chain through JSON files in a workspace directory. Schemas define the contracts between stages (`schemas/ddq-output.yaml`, `schemas/manager-profile.yaml`). The ILPA/AIMA DDQ taxonomy (`schemas/ilpa_aima_v1.yaml`) provides the 162-question framework for structured DDQ analysis.
+Skills chain through JSON files in a workspace directory. Schemas define the contracts between stages (`schemas/ddq-output.yaml`, `schemas/manager-profile.yaml`). The ILPA/AIMA DDQ taxonomy (`schemas/ilpa_aima_v1.yaml`) provides a 150+ question framework for structured DDQ analysis.
 
 ## Data Sources
 
@@ -107,6 +107,49 @@ Three synthetic DDQ PDFs in `samples/ddqs/` for testing and demo:
 2. **Show your work.** Every number traces to its source -- `[Source: manager-ddq.pdf, p.12]`.
 3. **Fail loudly.** Missing data and implausible results are flagged, never silently passed.
 4. **Verification gates.** Human review between pipeline stages.
+
+## See It Work
+
+Here's what running `/analyze-ddq` on the sample DDQs looks like:
+
+```
+> /analyze-ddq
+
+Extracting text from 3 DDQ PDFs...
+  granite-peak-capital.pdf: 8 pages, 15,227 characters
+  meridian-value-partners.pdf: 4 pages, 5,197 characters
+  osprey-global-advisors.pdf: 6 pages, 7,838 characters
+
+Mapping answers to ILPA taxonomy (150+ questions across 8 categories)...
+
+Completeness Dashboard:
+| Manager         | Answered | Gaps | Confidence |
+|-----------------|----------|------|------------|
+| Granite Peak    | 48/52    | 4    | HIGH       |
+| Meridian Value  | 22/52    | 30   | MEDIUM     |
+| Osprey Global   | 31/52    | 21   | MEDIUM     |
+
+ADV Cross-Reference:
+  Granite Peak:  AUM CONFIRMED ($4.3B DDQ vs $4.28B ADV)
+  Meridian:      AUM DISCREPANCY ($1.8B DDQ vs $1.4B ADV) [HIGH]
+  Osprey:        SEC enforcement action found, not fully disclosed in DDQ [HIGH]
+
+3 follow-up questions generated for Meridian, 5 for Osprey.
+
+HUMAN GATE: Review the extraction before proceeding to /draft-memo.
+```
+
+See `docs/skills.md` for detailed walkthroughs of every skill.
+
+## Documentation
+
+| Doc | What It Covers |
+|-----|---------------|
+| [ETHOS.md](ETHOS.md) | Design philosophy -- why every decision was made |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Technical design -- why a skill pack, not a library |
+| [docs/skills.md](docs/skills.md) | Deep dives on every skill with examples |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Developer guide -- how to add skills and scripts |
+| [CHANGELOG.md](CHANGELOG.md) | Release notes |
 
 ## Testing
 
