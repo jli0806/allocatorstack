@@ -10,8 +10,8 @@ built the way it is, not just what it contains.
 AllocatorStack is a Claude Code skill pack, not a Python library or a SaaS
 application. The reason is simple: the hard part of due diligence is reading
 comprehension. A DDQ reviewer reads a 25-page PDF, matches answers to a
-taxonomy of 150+ questions, cross-references claims against SEC filings, and
-flags discrepancies. Claude does all of that natively. Python scripts handle
+taxonomy of 150+ questions, compares responses across managers, and
+flags gaps and outliers. Claude does all of that natively. Python scripts handle
 only what Claude cannot: extracting text from binary PDFs (PyMuPDF needs native
 bindings), calling rate-limited government APIs (SEC EDGAR, FINRA BrokerCheck),
 and generating Excel files (openpyxl). Total Python across the entire project:

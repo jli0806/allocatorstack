@@ -2,7 +2,7 @@
 
 Claude Code skills for institutional asset allocation.
 
-Drop in DDQ PDFs. Get a structured comparison, claims cross-verified against SEC/FINRA filings, and a draft IC memo with provenance on every number. Each skill maps to a role in an investment office -- DDQ Reviewer, IC Memo Drafter, Manager Screener, Compliance Analyst. Humans review at every stage.
+Drop in DDQ PDFs from multiple managers. Get a structured side-by-side comparison mapped to the ILPA taxonomy, a completeness dashboard showing gaps and outliers, and a draft IC memo with provenance on every number. Each skill maps to a role in an investment office. Humans review at every stage.
 
 ## Quick Start
 
@@ -42,7 +42,7 @@ Run these in order. Each produces JSON that the next one reads.
 |-------|------|-------------|
 | `/screen-managers` | Sourcing Analyst | Takes a search mandate, screens candidates against fund criteria and public records (regulatory, litigation), produces a ranked short list |
 | `/prep-manager-meeting` | Research Analyst | Prepares agendas, talking points, and reference packets for meetings with shortlisted managers |
-| `/analyze-ddq` | DDQ Reviewer | Ingests DDQ PDFs, extracts answers mapped to ILPA categories, cross-references key claims against SEC ADV filings, flags discrepancies |
+| `/analyze-ddq` | DDQ Reviewer | Ingests DDQ PDFs, extracts answers mapped to ILPA categories, compares across managers, flags gaps and outliers |
 | `/draft-memo` | IC Memo Drafter | Assembles first-draft IC memo from pipeline data, with provenance links on every claim |
 
 ### Quarterly Monitoring
@@ -97,9 +97,9 @@ Three synthetic DDQ PDFs in `samples/ddqs/` for testing and demo:
 
 | Manager | Profile | Key Features |
 |---------|---------|-------------|
-| Granite Peak Capital | Clean, strong performer | Complete DDQ, no red flags, tables with fee/performance data |
-| Meridian Value Partners | Borderline | AUM discrepancy vs ADV, incomplete sections, key person departure |
-| Osprey Global Advisors | Red flags | SEC enforcement history, 350 bps TER, no hurdle rate, cybersecurity incident |
+| Granite Peak Capital | Clean, strong performer | Complete DDQ, tables with fee/performance data, consistent disclosures |
+| Meridian Value Partners | Borderline | Incomplete sections, key person departure, sparse risk management |
+| Osprey Global Advisors | Red flags | 350 bps TER, no hurdle rate, risk limit breaches, cybersecurity incident |
 
 ## Design Principles
 
@@ -129,12 +129,12 @@ Completeness Dashboard:
 | Meridian Value  | 22/52    | 30   | MEDIUM     |
 | Osprey Global   | 31/52    | 21   | MEDIUM     |
 
-ADV Cross-Reference:
-  Granite Peak:  AUM CONFIRMED ($4.3B DDQ vs $4.28B ADV)
-  Meridian:      AUM DISCREPANCY ($1.8B DDQ vs $1.4B ADV) [HIGH]
-  Osprey:        SEC enforcement action found, not fully disclosed in DDQ [HIGH]
+Flags:
+  Granite Peak:  Complete, consistent data across all categories
+  Meridian:      30 unanswered questions, risk management section sparse
+  Osprey:        Fee structure inconsistent (150 bps mgmt + 20% carry, no hurdle)
 
-3 follow-up questions generated for Meridian, 5 for Osprey.
+7 follow-up questions generated for Meridian, 5 for Osprey.
 
 HUMAN GATE: Review the extraction before proceeding to /draft-memo.
 ```

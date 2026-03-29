@@ -14,8 +14,8 @@ Run these in order. Each skill produces JSON output that the next skill reads.
 
 1. `/screen-managers` -- Screen candidates against fund criteria + regulatory red flag checks. Produces `manager-profiles.json`.
 2. `/prep-manager-meeting` -- Prepare agendas, talking points, reference packets for manager meetings.
-3. `/analyze-ddq` -- Ingest DDQ PDFs, map to ILPA taxonomy, cross-reference against SEC ADV. Produces `ddq-output.json`.
-4. `/draft-memo` -- Generate IC memo draft from structured data with provenance links. Requires `ddq-output.json`.
+3. `/analyze-ddq` -- Ingest DDQ PDFs, map to ILPA taxonomy, compare across managers, flag gaps and outliers. Produces `ddq-output.json`.
+4. `/draft-memo` -- Generate IC memo draft from structured data with provenance on every number. Requires `ddq-output.json`.
 
 ### Quarterly Monitoring (independent workflow)
 

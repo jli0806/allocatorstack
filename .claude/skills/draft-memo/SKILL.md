@@ -44,12 +44,13 @@ For sections requiring investment judgment:
 - **Risk Factors** -- Draft from DDQ data, but mark `[PM TO REVIEW AND COMPLETE]`
 - **Recommendation** -- `[PM TO COMPLETE -- recommend / do not recommend / further DD needed]`
 
-### Step 3: Add ADV cross-reference summary
+### Step 3: Add verification summary
 
-Include a section summarizing the cross-reference results from `/analyze-ddq`:
-- Number of claims confirmed vs. flagged
-- Any unresolved discrepancies (with severity)
-- Source citations for every comparison (DDQ page X vs. ADV Item Y)
+If the DDQ output includes ADV cross-reference results, summarize them (claims confirmed, discrepancies, unverifiable items). If no ADV data is available, note: "Regulatory cross-reference pending -- provide ADV filing data to complete this section."
+
+Always include:
+- Data quality flags from the extraction (gaps, outliers, inconsistencies)
+- Source citations for every data point (DDQ page X, fund config, screening data)
 
 ### Step 4: Format and write
 

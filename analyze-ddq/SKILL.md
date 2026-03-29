@@ -1,6 +1,6 @@
 ---
 name: analyze-ddq
-description: Ingest DDQ PDFs, extract structured data mapped to ILPA categories, cross-reference key claims against ADV filings, produce side-by-side comparisons
+description: Ingest DDQ PDFs, extract structured data mapped to ILPA categories, compare across managers, flag gaps and outliers
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ---
 

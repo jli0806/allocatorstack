@@ -19,7 +19,7 @@ Skills are SKILL.md files. Four helper scripts (~400 lines total) handle PDF ext
 ### Manager Due Diligence Pipeline
 1. `/screen-managers` — Takes a search mandate, screens candidates against fund criteria and public records (regulatory history, litigation), produces a ranked short list.
 2. `/prep-manager-meeting` — Prepares agendas, talking points, and reference packets for meetings with shortlisted managers.
-3. `/analyze-ddq` — Ingests DDQ PDFs, extracts answers mapped to ILPA categories, cross-references key claims (AUM, employee count, disciplinary history) against the manager's SEC ADV filing, flags gaps and discrepancies.
+3. `/analyze-ddq` — Ingests DDQ PDFs, extracts answers mapped to ILPA categories, compares across managers, flags gaps, outliers, and inconsistencies.
 4. `/draft-memo` — Assembles first-draft IC memo from pipeline data with provenance on every quantitative claim. Qualitative sections marked for the PM.
 
 ### Other Skills

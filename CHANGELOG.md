@@ -8,7 +8,7 @@ First release. The core manager due diligence pipeline works end-to-end.
 
 - `/screen-managers` -- Screen candidates against fund criteria, normalize returns, run SEC/FINRA red flag checks, produce ranked comparison
 - `/prep-manager-meeting` -- Prepare agendas, talking points, and reference packets for manager meetings (on-site, annual review, DDQ follow-up, initial)
-- `/analyze-ddq` -- Ingest DDQ PDFs, extract structured answers mapped to ILPA taxonomy, cross-reference claims against SEC ADV filings, produce comparison matrix
+- `/analyze-ddq` -- Ingest DDQ PDFs, extract structured answers mapped to ILPA taxonomy, compare across managers, flag gaps and outliers, produce comparison matrix
 - `/draft-memo` -- Generate IC memo draft with provenance links on every data point
 - `/monitor-adv` -- Quarterly monitoring: diff ADV filings, scan regulatory actions, flag exceptions by severity
 
